@@ -1,49 +1,48 @@
 export class Component extends HTMLElement {
-    constructor() {
-        super();
-        this.state = {};
-        this.props = {};
-        this.isShadow= false;
-    }
+  constructor() {
+    super();
+    this.state = {};
+    this.props = {};
+    this.isShadow = false
+  }
 
-    setState(callback) {
-        this.state = callback(this.state);
-        if(this.isShadow) {
-            this.shadowRoot.innerHTML = this.render()
-        }
-        else {
-            this.innerHTML = this.render()
-        }
+  setState(callback) {
+    this.state = callback(this.state);
+    if(this.isShadow) {
+      this.shadowRoot.innerHTML = this.render()
+    } else {
+      this.innerHTML = this.render()
     }
+  }
 
-    connectedCallback() {
-        this.getHtml()?.innerHTML = this.render()
-        this.componentDidMount();
+  connectedCallback() {
+    if(this.isShadow) {
+      this.attachShadow({ mode: 'open' });
+      this.shadowRoot.innerHTML = this.render()
+    } else {
+      this.innerHTML = this.render()
     }
+    this.componentDidMount();
+  }
 
-    disconnectedCallback() {
-        this.componentWillUnMount()
-    }
+  disconnectedCallback() {
+    this.componentWillUnmount();
+  }
 
-    attributeChangedCallback(name, oldValue, newValue) {
-        this.componentWillUpdate(name, oldValue, newValue);
-        this.getAttributeNames().forEach(() => {
-            this.props[name] = this.getAttribute(name);
-        })
-    }
+  attributeChangedCallback(name, oldValue, newValue) {
+    this.componentWillUpdate(name, oldValue, newValue);
+    this.getAttributeNames().forEach((name) => {
+      this.props[name] = this.getAttribute(name);
+    });
+  }
 
-    dispatch() {
-        this.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: this.props }));
-    }
+  dispatch(type, props) {
+    this.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: props }));
+  }
 
-    componentDidMount() { }
-    componentWillUpdate() { }
-    componentWillUnMount() { }
-    render() { };
+  componentDidMount() {}
+  componentWillUnmount() {}
+  componentWillUpdate() {}
+  componentWillUnmount() {}
+  render() {}
 }
-
-
-
-
-
-
