@@ -34,6 +34,16 @@ export class App extends core.Component {
       `
         <div id="shell">
           <it-router>
+            <nav>
+              <ul>
+                <li>
+                  <it-link to="/">Home</it-link>
+                <li>
+                <li>
+                  <it-link to="/admin">Admin</it-link>
+                <li>
+              </ul>
+            </nav>
             <it-route path="/" component="home-page" title="Home Page"></it-route>
             <it-route path="/admin" component="admin-page" title="Admin Page"></it-route>
             <it-route path="/movies/:id" component="movie-page" title="Movie Detail Page"></it-route>

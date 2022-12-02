@@ -18,7 +18,9 @@ export class Component extends HTMLElement {
   connectedCallback() {
     if(this.isShadow) {
       this.attachShadow({ mode: 'open' });
-      this.shadowRoot.innerHTML = this.render()
+      const tml = document.createElement("template");
+      tml.innerHTML = this.render()
+      this.shadowRoot.append(tml.content.cloneNode(true))
     } else {
       this.innerHTML = this.render()
     }
