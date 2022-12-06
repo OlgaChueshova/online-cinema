@@ -1,9 +1,8 @@
-import { Component } from "../../core";
-import './header.scss';
+import { appRoutes } from "../../../constants/appRoutes";
+import * as core from  "../../../core";
+import './header.scss'
 
-export class Header extends Component {
-
-
+export class Header extends core.Component {
     render () {
         return `
         <div id="header">
@@ -11,15 +10,25 @@ export class Header extends Component {
             <div id="navigation">
                 <ul>
                     <li>
-                        <it-link to="">
-                            <span class="active">HOME</span>
+                        <it-link to="${appRoutes.home}">
+                            <span class="active link">Home</span>
                         </it-link>
                     </li>
-                    <li><a href="#">NEWS</a></li>
-                    <li><a href="#">IN THEATERS</a></li>
-                    <li><a href="#">COMING SOON</a></li>
-                    <li><a href="#">CONTACT</a></li>
-                    <li><a href="#">ADVERTISE</a></li>
+                    <li>
+                        <it-link to="${appRoutes.admin}">
+                            <span class="link">Admin</span>
+                        </it-link>
+                    </li>
+                    <li>
+                        <it-link to="${appRoutes.signIn}">
+                            <span class="link">sign In</span>
+                        </it-link>
+                    </li>
+                    <li>
+                        <it-link to="${appRoutes.signUp}">
+                            <span class="link">sign Up</span>
+                        </it-link>
+                    </li>
                 </ul>
             </div>
 
