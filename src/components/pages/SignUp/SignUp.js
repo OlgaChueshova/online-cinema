@@ -4,8 +4,8 @@ import "../../atoms";
 import { initialFieldsState } from "./initialState";
 import { FormManager } from "../../../core/FormManager/FormManager";
 import { Validator } from "../../../core/FormManager/Validator";
-import { AuthService } from "../../../services/Auth";
-
+import { authService } from "../../../services/Auth";
+import { appRoutes } from '../../../constants/appRoutes'
 
 export class SignUpPage extends Component {
   constructor() {
@@ -22,14 +22,20 @@ export class SignUpPage extends Component {
   }
 
   toggleIsLoading = () => {
-    
+    this.setState((state) => {
+      return {
+        ...state,
+        isLoading: !state.isLoading
+      }
+    })
   }
 
   registerUser = (data) => {
     this.toggleIsLoading();
-    AuthService.signUp(data.email, data.password)
+    authService.signUp(data.email, data.password)
     .then((user) => {
-      console.log(user)
+      authService.user = user;
+      this.dispatch('change-route', { target: appRouts.home });
     })
     .catch((error) => {
       this.setState((state) => {
@@ -82,6 +88,7 @@ export class SignUpPage extends Component {
     return `
       <it-preloader is-loading="${this.state.isLoading}">
         <form class="mt-5 registration-form">
+          <div class="invalid-feedback text-center mb-3 d-block">${this.state.error}</div>
           <it-input
             type="email"
             label="Email"

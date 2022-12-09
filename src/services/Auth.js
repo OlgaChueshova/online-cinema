@@ -1,21 +1,44 @@
-import { CloudService } from "./Cloud"
 import {
     getAuth,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     signOut,
-    onAuthStateChanged
-
-} from 'firebase/auth'
-import { cloudService } from "./Cloud"
+    onAuthStateChanged,
+} from "firebase/auth";
+import { cloudService } from "./Cloud";
 
 export class AuthService {
     constructor() {
-        this.auth = getAuth(CloudService.app)
+        this.auth = getAuth(cloudService.app);
+        this._user = null;
+    }
+
+    set user(user) {
+        this._user = user;
+    }
+
+    get user() {
+        return this._user
+    }
+
+    init() {
+        return new Promise((resolve, reject) => {
+            onAuthStateChanged(this.auth, (user) => {
+                resolve(user);
+            },
+                (error) => {
+                    reject(error);
+                }
+            );
+        });
     }
 
     signUp(email, password) {
-        return createUserWithEmailAndPassword(this.auth, email.password)
+        return createUserWithEmailAndPassword(this.auth, email, password);
+    }
+
+    signOut(email, password) {
+        return createUserWithEmailAndPassword(this.auth, email, password)
     }
 }
 

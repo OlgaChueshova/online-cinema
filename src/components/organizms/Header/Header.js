@@ -2,9 +2,28 @@ import { Component } from "../../core";
 import './header.scss';
 
 export class Header extends Component {
+    constructor() {
+        super();
+
+    }
+
+    onSignOut = (evt)=> {
+        evt.preventDefault();
+        if(evt.target.closest('.sign-out-link')) {
+            this.dispatch('sign-out')
+        }
+    }
+
+    componentDidMount() {
+        this.addEventListener('click', this.onSignOut)
+    }
 
 
-    render () {
+    static get observedAttributes() {
+        return ['is-logged']
+    }
+
+    render() {
         return `
         <div id="header">
             <h1 id="logo"><a href="#">MovieHunter</a></h1>
@@ -20,6 +39,16 @@ export class Header extends Component {
                     <li><a href="#">COMING SOON</a></li>
                     <li><a href="#">CONTACT</a></li>
                     <li><a href="#">ADVERTISE</a></li>
+   
+                    ${JSON.parse(this.props['is-logged']) 
+                    ? `
+                    <li>
+                        <a href="#" class="sign-out-link">
+                            <span class="link">Sign Out</span>
+                        </a>
+                    </li>
+                    `
+                    : ''}
                 </ul>
             </div>
 
@@ -47,7 +76,7 @@ export class Header extends Component {
                 </div>
             </div>
       </div>
-        `;
+        `
     }
 }
 
