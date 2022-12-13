@@ -1,30 +1,28 @@
 import { Component } from "../core";
-import { AuthService } from "../services/Auth";
+import { authService } from "../services/Auth";
 import { appRoutes } from "../constants/appRoutes";
 
-
 export class PrivateRoute extends Component {
-    constructor() {
-        super();
-        this.isShadow = true;
-    }
+  constructor() {
+    super();
+    this.isShadow = true;
+  }
 
-    static get observedAttribute() {
-        return ['path']
-    }
+  static get observedAttributes() {
+    return ["path"];
+  }
 
-    connectedCallback() {
-        if (!authService.user) {
-            window.dispatch('change-route', { target: appRoutes[this.props.path ?? "signUp"] });
-        }
+  componentDidMount() {
+    if (!authService.user) {
+      this.dispatch("change-route", {
+        target: appRoutes[this.props.path ?? "signUp"],
+      });
     }
+  }
 
-    render() {
-        return `
-            <slot></slot>
-        `
-    }
-
+  render() {
+    return `<slot></slot>`;
+  }
 }
 
-customElements.define('private-route', PrivateRoute)
+customElements.define("private-route", PrivateRoute);

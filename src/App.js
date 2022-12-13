@@ -1,18 +1,16 @@
 import * as core from "./core";
-import './components'
+import "./components";
 import { appRoutes } from "./constants/appRoutes";
 import { authService } from "./services/Auth";
-import { Auth } from "./auth";
-import { signOut } from "firebase/auth";
 
 export class App extends core.Component {
   constructor() {
     super();
     this.state = {
       isLoading: false,
-      error: '',
-      isLogged: false
-    }
+      isLogged: false,
+      error: "",
+    };
   }
 
   toggleIsLoading() {
@@ -20,8 +18,8 @@ export class App extends core.Component {
       return {
         ...state,
         isLoading: !state.isLoading,
-      }
-    })
+      };
+    });
   }
 
   getUser() {
@@ -34,20 +32,20 @@ export class App extends core.Component {
           return {
             ...state,
             isLogged: Boolean(user),
-          }
-        })
+          };
+        });
       })
       .catch((error) => {
         this.setState((state) => {
           return {
             ...state,
-            error: error.message
+            error: error.message,
           };
         });
       })
       .finally(() => {
         this.toggleIsLoading();
-      })
+      });
   }
 
   onSignOut = () => {
@@ -59,52 +57,78 @@ export class App extends core.Component {
           return {
             ...state,
             isLogged: false,
-          }
-        })
+          };
+        });
       })
       .catch((error) => {
         this.setState((state) => {
           return {
             ...state,
-            error: error.message
+            error: error.message,
           };
         });
       })
       .finally(() => {
         this.toggleIsLoading();
-      })
-  }
+      });
+  };
 
+  setIsLogged = () => {
+    this.setState((state) => {
+      return {
+        ...state,
+        isLogged: true
+      }
+    })
+  }
 
   componentDidMount() {
     this.getUser();
-    this.addEventListener('sign-out', this.onSignOut)
+    this.addEventListener('user-is-logged', this.setIsLogged)
+    this.addEventListener("user-is-logauted", this.onSignOut);
+  }
+
+  componentWillUnmount() {
+    this.removeEventListener("sign-out", this.onSignOut);
+    this.removeEventListener("user-is-logauted", this.onSignOut);
   }
 
   render() {
-    return (this.state.isLoading
+    return this.state.isLoading
       ? `<it-preloader is-loading="${this.state.isLoading}"></it-preloader>`
       : `
       <div id="shell">
-          <it-router>
+        <it-router>
             <it-header is-logged="${this.state.isLogged}"></it-header>
-                <main id="main">
-                  <it-route path="${appRoutes.home}" component="home-page" title="Home Page"></it-route>
-                  <it-route path="${appRoutes.admin}" component="admin-page" title="Admin Page"></it-route>
-                  <it-route path="${appRoutes.signIn}" component="sign-in-page" title="SignIn Page"></it-route>
-                  <it-route path="${appRoutes.signUp}" component="sign-up-page" title="SignUp Page"></it-route>
-                  <it-route path="${appRoutes.movieDetails}/:id" component="movie-details-page" title="Movie Details Page"></it-route>
-                  <it-route path="${appRoutes.errorPage}" component="error-page" title="Not Found Page"></it-route>
-                  <it-outlet></it-outlet>
-                </main>
+              <main id="main">
+                <it-route path="${appRoutes.home}" component="home-page" title="Home Page"></it-route>
+                <it-route path="${appRoutes.admin}" component="admin-page" title="Admin Page"></it-route>
+                <it-route path="${appRoutes.signIn}" component="sign-in-page" title="SignIn Page"></it-route>
+                <it-route path="${appRoutes.signUp}" component="sign-up-page" title="SignUp Page"></it-route>
+                <it-route path="${appRoutes.movieDetails}/:id" component="movie-details-page" title="Movie Details Page"></it-route>
+                <it-route path="${appRoutes.errorPage}" component="error-page" title="Not Found Page"></it-route>
+                <it-outlet></it-outlet>
+              </main>
             <it-footer></it-footer>
-          </it-router>
+        </it-router>
       </div>
-      `
-    )
+      `;
   }
 }
 
 customElements.define("my-app", App);
 
-
+{
+  /* <it-header></it-header>
+${this.state.movies.map(({ id, title, poster, rating, comments }) => {
+  return `
+    <movie-card 
+      id="${id}"
+      title="${title}"
+      poster="${poster}"
+      rating="${rating}"
+      comments='${JSON.stringify(comments)}'
+    ></movie-card>
+  `
+}).join(' ')} */
+}
