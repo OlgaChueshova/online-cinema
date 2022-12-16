@@ -1,4 +1,4 @@
-import { initializeApp } from "firebase/app";
+import { cloudService } from './Cloud';
 import {
   getFirestore,
   collection,
@@ -7,10 +7,10 @@ import {
   doc,
   updateDoc,
   deleteDoc,
-} from "firebase/firestore";
-import { cloudService } from "./Cloud";
+  getDoc,
+} from 'firebase/firestore';
 
-export class Database {
+class DatabaseService {
   constructor() {
     this._database = getFirestore(cloudService.app);
   }
@@ -27,6 +27,11 @@ export class Database {
     });
   }
 
+  getDocument(collectionKey, id) {
+    const documentRef = doc(this._database, collectionKey, id);
+    return getDoc(documentRef).then((data) => data.data())
+  }
+
   update(collectionKey, id, body) {
     const document = doc(this._database, collectionKey, id);
     return updateDoc(document, body);
@@ -36,14 +41,6 @@ export class Database {
     const document = doc(this._database, collectionKey, id);
     return deleteDoc(document);
   }
-
-  static getInstance() {
-    if (!Database.instance) {
-      Database.instance = new Database();
-    }
-
-    return Database.instance;
-  }
 }
 
-export const databaseService = new Database();
+export const databaseService = new DatabaseService();

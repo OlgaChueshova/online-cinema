@@ -1,23 +1,23 @@
-import { Component } from "../../../core";
+import { appRoutes } from "../../../constants/appRoutes";
+import * as core from "../../../core";
 import "./movieCard.scss";
+import "../../molecules";
 
-export class MovieCard extends Component {
+export class MovieCard extends core.Component {
   static get observedAttributes() {
-    return ["title", "poster", "descriptions", "id", "rating"];
+    return ["title", "poster", "description", "id", "rating", "genre"];
   }
 
   render() {
     return `
         <div class="movie">
             <div class="movie-image">
-              <span class="play"><span class="name">${this.props.title}</span></span>
-              <a href="#"><img src="../../assets/images/${this.props.poster}" alt="${this.props.title}"/></a>
+            <span class="play"><span class="name">${this.props.title}</span></span>
+            <it-link to="${appRoutes.movies}/${this.props.id}">
+              <img src="${this.props.poster}" alt="${this.props.title}" />
+            </it-link>
             </div>
-            <div class="rating">
-              <p>RATING</p>
-              <div class="stars">
-                  <div class="stars-in"></div>
-            </div>
+            <it-rating count="${this.props.rating}"></it-rating>
         </div>
         `;
   }
